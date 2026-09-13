@@ -59,6 +59,11 @@ const paths = {
 		dest: `./${buildPathName}/assets/fonts`,
 		destProd: `./${distPathName}/assets/fonts`,
 	},
+	files: {
+		src: `./${srcPathName}/files/**/*`,
+		dest: `./${buildPathName}/assets/files`,
+		destProd: `./${distPathName}/assets/files`,
+	},
 	php: {
 		src: `./${srcPathName}/php/**/*.php`,
 		dest: `./${buildPathName}/assets/php`,
@@ -78,6 +83,7 @@ const paths = {
 		img: `./${buildPathName}/assets/img/*`,
 		fonts: `./${buildPathName}/assets/fonts/*`,
 		php: `./${buildPathName}/assets/php/*`,
+		files: `./${buildPathName}/assets/files/*`,
 		// json: `./${buildPathName}/assets/json/*`,
 	},
 };
@@ -174,6 +180,16 @@ function fontsTaskProd() {
 	return src(paths.fonts.src).pipe(dest(paths.fonts.destProd));
 }
 
+// Files Task
+function filesTask() {
+	return src(paths.files.src).pipe(dest(paths.files.dest));
+}
+
+// Files Task Production
+function filesTaskProd() {
+	return src(paths.files.src).pipe(dest(paths.files.destProd));
+}
+
 // PHP Task
 function phpTask() {
 	return src(paths.php.src).pipe(dest(paths.php.dest));
@@ -219,6 +235,9 @@ function cleanPhp() {
 function cleanFonts() {
 	return del(paths.clean.fonts);
 }
+function cleanFiles() {
+	return del(paths.clean.files);
+}
 // function cleanJson() {
 // 	return del(paths.clean.json);
 // }
@@ -230,6 +249,7 @@ function watchTask() {
 	watch(paths.js.src, series(cleanJs, cleanCss, jsTask, cssTask, browsersyncReload));
 	watch(paths.img.src, series(cleanImg, imgTask, browsersyncReload));
 	watch(paths.fonts.src, series(cleanFonts, fontsTask, browsersyncReload));
+	watch(paths.files.src, series(cleanFiles, filesTask, browsersyncReload));
 	watch(paths.php.src, series(cleanPhp, phpTask, browsersyncReload));
 	// watch(paths.json.src, series(cleanJson, jsonTask, browsersyncReload));
 }
@@ -237,7 +257,7 @@ function watchTask() {
 // Gulp default/build task
 exports.default = series(
 	cleanAll,
-	parallel(htmlTask, cssTask, jsTask, imgTask, fontsTask, phpTask),
+	parallel(htmlTask, cssTask, jsTask, imgTask, fontsTask, filesTask, phpTask),
 	browsersyncServe,
 	watchTask
 );
@@ -250,6 +270,7 @@ exports.prod = series(
 	jsTaskProd,
 	imgTaskProd,
 	fontsTaskProd,
+	filesTaskProd,
 	phpTaskProd
 	// jsonTaskProd,
 );

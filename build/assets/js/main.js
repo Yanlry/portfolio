@@ -295,25 +295,3 @@ if (form) {
 
 	requestAnimationFrame(step);
 })();
-
-// Portrait joke warning: shows a countdown then fades out after 5s.
-document.querySelectorAll(".js-photo-warning").forEach((el) => {
-	let seconds = 5;
-	const countdownEl = el.querySelector(".js-warning-countdown");
-
-	function updateCountdown() {
-		if (countdownEl) countdownEl.textContent = `Disparaît dans ${seconds}s`;
-	}
-	updateCountdown();
-
-	const interval = setInterval(() => {
-		seconds -= 1;
-		if (seconds <= 0) {
-			clearInterval(interval);
-			el.style.opacity = "0";
-			setTimeout(() => el.remove(), 500);
-		} else {
-			updateCountdown();
-		}
-	}, 1000);
-});
